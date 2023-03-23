@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <iostream>
 #include <algorithm>
 #include <set>
 #include <vector>
@@ -23,7 +22,6 @@ public:
 		hosts.clear();
 
 		for_each(files->begin(), files->end(), [=](ConfigFile* file) {
-			wcout << file->path << endl;
 			hosts.merge(file->getHosts());
 		});
 	}
