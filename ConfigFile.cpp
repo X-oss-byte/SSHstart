@@ -23,6 +23,8 @@ public:
 		this->path = wstring(folderPath) + wstring(file);
 		this->type = type;
 		this->adminRequired = adminRequired;
+
+		CoTaskMemFree(folderPath);
 	}
 
 	set<string> getHosts() {
