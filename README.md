@@ -8,7 +8,7 @@ The installer offers integration into the Windows Terminal and the system path. 
 
 ## Building
 
-SSHStart is built with Visual Studio, which offers the easiest way to build SSHStart. The installer is built from `install.iss` with Inno Setup.
+SSHStart is built with Visual Studio, which offers the easiest way to build SSHStart. The installer is built from `install.iss` with Inno Setup. Tests can also be run in Visual Studio. They are located in the "tests" project.
 
 ## Screenshot
 
