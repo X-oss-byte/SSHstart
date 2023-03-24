@@ -22,5 +22,5 @@ public:
 	void edit();
 
 private:
-	const char whitespace[2] = { '\t', ' ' };
+	const char* whitespace = "\t ";
 };
