@@ -14,7 +14,7 @@ Host a
 Host d  
 
 # Multiple hosts
-Host ee f
+Host ee   f
 
 # Different key
 HostName g
@@ -36,3 +36,18 @@ Host    i
 
 # Unicode
 Host 验🍍
+
+# Equal sign
+Host = j
+
+# Quotes
+Host = "k" "l l"
+
+# Case-insensitive
+HoST m
+
+# Just quotes
+Host ""
+
+# Short key
+Ho n

@@ -39,19 +39,41 @@ set<string> ConfigFile::getHosts() {
 		line.erase(0, line.find_first_not_of(whitespace));
 		line.erase(line.find_last_not_of(whitespace) + 1);
 
-		// Check for "Host"
-		if (line.substr(0, 4) != "Host")
+		// Check for and remove "Host"
+		if (lstrcmpiA("HOST", line.substr(0, 4).c_str()) != 0)
 			continue;
 
-		// Make sure "Host" is followed by whitespace
-		size_t nextNonSpace = line.find_first_not_of(whitespace, 4);
+		line.erase(0, 4);
 
-		if (nextNonSpace == 4 || nextNonSpace == string::npos)
+		// Check for and remove separator
+		size_t nonSepPos = line.find_first_not_of(separator);
+
+		if (nonSepPos == 0)
 			continue;
 
-		// Remainder of the line is the host name
-		line.erase(0, nextNonSpace);
-		hosts.insert(line);
+		line.erase(0, nonSepPos);
+
+		// Iterate host names
+		while (!line.empty()) {
+			size_t end;
+
+			if (line.at(0) == '"') {
+				// Find and remove quotes
+				line.erase(0, 1);
+				end = line.find('"');
+
+				if (end == string::npos) break;
+				if (end == 0) continue;
+
+				line.erase(end, 1);
+			} else {
+				end = line.find_first_of(whitespace);
+			}
+
+			// Insert and remove the host name
+			hosts.insert(line.substr(0, end));
+			line.erase(0, line.find_first_not_of(whitespace, end));
+		}
 	}
 
 	return hosts;

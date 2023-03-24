@@ -1,7 +1,6 @@
 ﻿#include <set>
 #include <string>
 #include "CppUnitTest.h"
-#include <windows.foundation.collections.h>
 #include "../ConfigFile.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -11,7 +10,7 @@ namespace SSHStartTests {
 	TEST_CLASS(TestConfigFile) {
 	public:
 		TEST_METHOD(getHosts) {
-			string expectedHosts = u8"a..b..c..d..ee f..h..i..验🍍..";
+			string expectedHosts = u8"a..b..c..d..ee..f..h..i..j..k..l l..m..验🍍..";
 
 			ConfigFile configFile(wstring(L"../../tests/test_config"), "t", "test");
 			string hostList;
