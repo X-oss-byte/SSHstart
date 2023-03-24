@@ -3,8 +3,8 @@
 #include <string>
 #include <windows.h>
 #include <knownfolders.h>
-#include "HostNames.cpp"
-#include "ConfigFile.cpp"
+#include "HostNames.h"
+#include "ConfigFile.h"
 
 using namespace std;
 

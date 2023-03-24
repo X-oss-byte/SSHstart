@@ -4,28 +4,21 @@
 #include <algorithm>
 #include <set>
 #include <vector>
-#include "ConfigFile.cpp"
+#include "HostNames.h"
+#include "ConfigFile.h"
 
 using namespace std;
 
-class HostNames {
-public:
-	set<string> hosts;
+HostNames::HostNames(vector<ConfigFile*>* files) {
+	this->files = files;
 
-	HostNames(vector<ConfigFile*>* files) {
-		this->files = files;
+	reload();
+}
 
-		reload();
-	}
+void HostNames::reload() {
+	hosts.clear();
 
-	void reload() {
-		hosts.clear();
-
-		for_each(files->begin(), files->end(), [=](ConfigFile* file) {
-			hosts.merge(file->getHosts());
-		});
-	}
-
-private:
-	vector<ConfigFile*>* files;
-};
+	for_each(files->begin(), files->end(), [=](ConfigFile* file) {
+		hosts.merge(file->getHosts());
+	});
+}
