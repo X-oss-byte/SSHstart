@@ -35,14 +35,23 @@ set<string> ConfigFile::getHosts() {
 	string line;
 
 	while (getline(file, line)) {
-		size_t first = line.find_first_not_of(' ');
-		size_t last = line.find_last_not_of(' ');
-		line = line.substr(first, last - first + 1);
+		// Remove whitespace
+		line.erase(0, line.find_first_not_of(whitespace));
+		line.erase(line.find_last_not_of(whitespace) + 1);
 
-		if (line.rfind("Host ", 0) != 0)
+		// Check for "Host"
+		if (line.substr(0, 4) != "Host")
 			continue;
 
-		hosts.insert(line.substr(5));
+		// Make sure "Host" is followed by whitespace
+		size_t nextNonSpace = line.find_first_not_of(whitespace, 4);
+
+		if (nextNonSpace == 4 || nextNonSpace == string::npos)
+			continue;
+
+		// Remainder of the line is the host name
+		line.erase(0, nextNonSpace);
+		hosts.insert(line);
 	}
 
 	return hosts;

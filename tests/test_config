@@ -1,16 +1,35 @@
 ﻿# Normal
 Host a
+
 # Repeat
 Host a
+
+# Tab before
+	Host b
+
 # Spaces before
   Host c
+
 # Spaces after
 Host d  
+
 # Multiple hosts
 Host ee f
+
 # Different key
 HostName g
+
 # Empty
 Host
+
 # Empty with space
 Host 
+
+# Host followed by tab
+Host	h
+
+# Host followed multiple spaces
+Host    i
+
+# Just spaces
+  
