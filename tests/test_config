@@ -1,0 +1,16 @@
+﻿# Normal
+Host a
+# Repeat
+Host a
+# Spaces before
+  Host c
+# Spaces after
+Host d  
+# Multiple hosts
+Host ee f
+# Different key
+HostName g
+# Empty
+Host
+# Empty with space
+Host 

@@ -15,6 +15,7 @@ public:
 	string type;
 	bool adminRequired;
 
+	ConfigFile(wstring path, string editKey, string type, bool adminRequired = false);
 	ConfigFile(REFKNOWNFOLDERID folder, LPCWSTR file, string editKey, string type, bool adminRequired = false);
 
 	set<string> getHosts();
