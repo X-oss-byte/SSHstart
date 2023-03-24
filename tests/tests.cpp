@@ -11,7 +11,7 @@ namespace SSHStartTests {
 	TEST_CLASS(TestConfigFile) {
 	public:
 		TEST_METHOD(getHosts) {
-			string expectedHosts = "a..b..c..d..ee f..h..i..";
+			string expectedHosts = u8"a..b..c..d..ee f..h..i..验🍍..";
 
 			ConfigFile configFile(wstring(L"../../tests/test_config"), "t", "test");
 			string hostList;

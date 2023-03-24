@@ -66,6 +66,9 @@ string selectChoice(string error = "") {
 }
 
 int main() {
+	SetConsoleOutputCP(CP_UTF8);
+	setlocale(LC_ALL, ".UTF8");
+
 	files.push_back(new ConfigFile(FOLDERID_Profile, L"\\.ssh\\config", "e", "user"));
 	files.push_back(new ConfigFile(FOLDERID_ProgramData, L"\\ssh\\ssh_config", "g", "global", true));
 
