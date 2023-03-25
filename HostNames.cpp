@@ -3,7 +3,6 @@
 #include <vector>
 #include <algorithm>
 #include <set>
-#include <vector>
 #include "HostNames.h"
 #include "ConfigFile.h"
 
