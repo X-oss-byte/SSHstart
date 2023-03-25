@@ -10,13 +10,12 @@ using namespace std;
 
 class ConfigFile {
 public:
-	string editKey;
 	wstring path;
 	string type;
-	bool adminRequired;
+	char editKey;
 
-	ConfigFile(wstring path, string editKey, string type, bool adminRequired = false);
-	ConfigFile(REFKNOWNFOLDERID folder, LPCWSTR file, string editKey, string type, bool adminRequired = false);
+	ConfigFile(wstring path, string type, char editKey);
+	ConfigFile(REFKNOWNFOLDERID folder, LPCWSTR file, string type, char editKey);
 
 	set<string> getHosts();
 	void edit();

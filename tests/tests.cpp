@@ -12,7 +12,7 @@ namespace SSHStartTests {
 		TEST_METHOD(getHosts) {
 			string expectedHosts = u8"a..b..c..d..ee..f..h..i..j..k..l l..m..验🍍..";
 
-			ConfigFile configFile(wstring(L"../../tests/test_config"), "t", "test");
+			ConfigFile configFile(wstring(L"../../tests/test_config"), "test", 't');
 			string hostList;
 
 			for (const string& host : configFile.getHosts())

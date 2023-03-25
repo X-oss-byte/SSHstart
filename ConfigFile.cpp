@@ -5,15 +5,16 @@
 #include <fstream>
 #include <windows.h>
 #include <ShlObj.h>
+#include <Aclapi.h>
 #include "ConfigFile.h"
 
 using namespace std;
 
-ConfigFile::ConfigFile(wstring cPath, string cEditKey, string cType, bool cAdminRequired)
-	: path{ cPath }, editKey{ cEditKey }, type{ cType }, adminRequired{ cAdminRequired } { }
+ConfigFile::ConfigFile(wstring cPath, string cType, char cEditKey)
+	: path{ cPath }, type{ cType }, editKey{ cEditKey } { }
 
-ConfigFile::ConfigFile(REFKNOWNFOLDERID folder, LPCWSTR file, string cEditKey, string cType, bool cAdminRequired)
-	: editKey{ cEditKey }, type{ cType }, adminRequired{ cAdminRequired } {
+ConfigFile::ConfigFile(REFKNOWNFOLDERID folder, LPCWSTR file, string cType, char cEditKey)
+	: type{ cType }, editKey{ cEditKey } {
 	PWSTR folderPath;
 
 	SHGetKnownFolderPath(folder, NULL, NULL, &folderPath);
@@ -57,7 +58,7 @@ set<string> ConfigFile::getHosts() {
 		while (!line.empty()) {
 			size_t end;
 
-			if (line.at(0) == '"') {
+			if (line[0] == '"') {
 				// Find and remove quotes
 				line.erase(0, 1);
 				end = line.find('"');
@@ -80,10 +81,29 @@ set<string> ConfigFile::getHosts() {
 }
 
 void ConfigFile::edit() {
+	PACL dcal;
+	PSECURITY_DESCRIPTOR psd;
+	PACCESS_ALLOWED_ACE ace = NULL;
+	BOOL canWrite = FALSE;
+
+	GetNamedSecurityInfo(
+		this->path.c_str(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+		NULL, NULL, &dcal, NULL, &psd
+	);
+
+	for (DWORD i = 0; !canWrite && i < dcal->AceCount; i++) {
+		GetAce(dcal, i, (LPVOID*)&ace);
+
+		if (ace->Mask & FILE_WRITE_DATA)
+			CheckTokenMembership(NULL, &ace->SidStart, &canWrite);
+	}
+
+	LocalFree(psd);
+
 	SHELLEXECUTEINFO execInfo{};
 	execInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	execInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-	execInfo.lpVerb = this->adminRequired ? L"runas" : L"open";
+	execInfo.lpVerb = canWrite ? L"open" : L"runas";
 	execInfo.lpFile = L"notepad";
 	execInfo.lpParameters = this->path.c_str();
 	execInfo.nShow = SW_SHOW;

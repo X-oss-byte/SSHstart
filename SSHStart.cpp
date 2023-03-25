@@ -43,7 +43,7 @@ string selectChoice(string error = "") {
 	getline(cin, line);
 
 	for (ConfigFile* file : files) {
-		if (line != file->editKey) continue;
+		if (line.size() > 1 || line[0] != file->editKey) continue;
 
 		file->edit();
 		hostNames->reload();
@@ -69,8 +69,8 @@ int main() {
 	SetConsoleOutputCP(CP_UTF8);
 	setlocale(LC_ALL, ".UTF8");
 
-	files.push_back(new ConfigFile(FOLDERID_Profile, L"\\.ssh\\config", "e", "user"));
-	files.push_back(new ConfigFile(FOLDERID_ProgramData, L"\\ssh\\ssh_config", "g", "global", true));
+	files.push_back(new ConfigFile(FOLDERID_Profile, L"\\.ssh\\config", "user", 'e'));
+	files.push_back(new ConfigFile(FOLDERID_ProgramData, L"\\ssh\\ssh_config", "global", 'g'));
 
 	hostNames = new HostNames(&files);
 
