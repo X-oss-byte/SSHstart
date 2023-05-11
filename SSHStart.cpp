@@ -11,7 +11,7 @@ using namespace std;
 vector<ConfigFile*> files;
 HostNames* hostNames;
 
-void showChoices(string error = "") {
+string getChoice(string error = "") {
 	system("cls");
 
 	cout << "SSHStart" << endl << endl;
@@ -34,38 +34,49 @@ void showChoices(string error = "") {
 		cout << "Error: " << error << endl << endl;
 
 	cout << "Choose: ";
-}
-
-string selectChoice(string error = "") {
-	showChoices(error);
 
 	string line;
 	getline(cin, line);
 
+	return line;
+}
+
+string processChoice(string choice) {
+	int index;
+	
+start:
+	if (choice.empty()) {
+		choice = getChoice();
+		goto start;
+	}
+
 	for (ConfigFile* file : files) {
-		if (line.size() > 1 || line[0] != file->editKey) continue;
+		if (choice.size() > 1 || choice[0] != file->editKey)
+			continue;
 
 		file->edit();
 		hostNames->reload();
 
-		return selectChoice();
+		choice = getChoice();
+		goto start;
 	}
 
-	int choice;
-	
 	try {
-		choice = stoi(line) - 1;
+		index = stoi(choice) - 1;
 	} catch (invalid_argument) {
-		return selectChoice("Invalid choice");
+		choice = getChoice("Invalid choice");
+		goto start;
 	}
 
-	if (choice < 0 || choice >= hostNames->hosts.size())
-		return selectChoice("Choice out of range");
+	if (index < 0 || index >= hostNames->hosts.size()) {
+		choice = getChoice("Choice out of range");
+		goto start;
+	}
 
-	return *next(hostNames->hosts.begin(), choice);
+	return *next(hostNames->hosts.begin(), index);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	SetConsoleOutputCP(CP_UTF8);
 	setlocale(LC_ALL, ".UTF8");
 
@@ -73,10 +84,7 @@ int main() {
 	files.push_back(new ConfigFile(FOLDERID_ProgramData, L"\\ssh\\ssh_config", "global", 'g'));
 
 	hostNames = new HostNames(&files);
-
-	string choice = selectChoice();
-
-	cout << endl;
+	string choice = processChoice(argc > 1 ? argv[1] : getChoice());
 
 	system("cls");
 	system(("ssh " + choice).c_str());
