@@ -63,7 +63,7 @@ start:
 
 	try {
 		index = stoi(choice) - 1;
-	} catch (invalid_argument) {
+	} catch (...) {
 		choice = getChoice("Invalid choice");
 		goto start;
 	}
