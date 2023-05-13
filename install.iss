@@ -1,6 +1,6 @@
 [Setup]
 AppName = SSHStart
-AppVersion = 1.1.0
+AppVersion = 1.2.0
 DefaultDirName = {autopf}\SSHStart
 OutputBaseFilename = SSHStart Installer
 PrivilegesRequiredOverridesAllowed = Dialog
@@ -131,7 +131,7 @@ procedure CurStepChanged(CurStep:TSetupStep);
 	end;
 
 	if IsComponentSelected('sshs') then begin
-		SaveStringToFile(AppPath + '\bin\sshs.cmd', + '@"' + AppPath + '\bin\sshstart.exe"', False);
+		SaveStringToFile(AppPath + '\bin\sshs.cmd', + '@"' + AppPath + '\bin\sshstart.exe" %*', False);
 	end;
 end;
 
