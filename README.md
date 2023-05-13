@@ -2,6 +2,12 @@
 
 SSHStart allows you to easily view, edit, and launch your saved SSH hosts. With it you can list and choose a SSH host to enter and view/edit your system-wide and user-specific SSH host.
 
+## Usage
+
+`sshstart [choice]`
+
+`choice` is an optional argument representing a choice from the SSHStart menu to choose. The menu will still be presented if there is an error with this choice.
+
 ## Integrations
 
 The installer offers integration into the Windows Terminal and the system path. The installer also defines the alias `sshs`, making it easier to launch SSHStart from a terminal.
