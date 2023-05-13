@@ -80,8 +80,8 @@ int main(int argc, char* argv[]) {
 	SetConsoleOutputCP(CP_UTF8);
 	setlocale(LC_ALL, ".UTF8");
 
-	files.push_back(new ConfigFile(FOLDERID_Profile, L"\\.ssh\\config", "user", 'e'));
-	files.push_back(new ConfigFile(FOLDERID_ProgramData, L"\\ssh\\ssh_config", "global", 'g'));
+	files.push_back(new ConfigFile(FOLDERID_Profile, L".ssh", L"config", "user", 'e'));
+	files.push_back(new ConfigFile(FOLDERID_ProgramData, L"ssh", L"ssh_config", "global", 'g'));
 
 	hostNames = new HostNames(&files);
 	string choice = processChoice(argc > 1 ? argv[1] : getChoice());

@@ -5,30 +5,29 @@
 #include <fstream>
 #include <windows.h>
 #include <ShlObj.h>
-#include <Aclapi.h>
 #include "ConfigFile.h"
 
 using namespace std;
 
-ConfigFile::ConfigFile(wstring cPath, string cType, char cEditKey)
-	: path{ cPath }, type{ cType }, editKey{ cEditKey } { }
+ConfigFile::ConfigFile(wstring cFolderPath, wstring cFilePath, string cType, char cEditKey)
+	: folderPath{ cFolderPath }, filePath{ cFilePath }, type{ cType }, editKey{ cEditKey } { }
 
-ConfigFile::ConfigFile(REFKNOWNFOLDERID folder, LPCWSTR file, string cType, char cEditKey)
+ConfigFile::ConfigFile(REFKNOWNFOLDERID knownFolderID, LPCWSTR folder, LPCWSTR file, string cType, char cEditKey)
 	: type{ cType }, editKey{ cEditKey } {
-	PWSTR folderPath;
 
-	SHGetKnownFolderPath(folder, NULL, NULL, &folderPath);
+	LPWSTR knownFolder;
+	SHGetKnownFolderPath(knownFolderID, NULL, NULL, &knownFolder);
 
-	path = wstring(folderPath);
-	path.append(file);
+	folderPath = wstring(knownFolder) + L"\\" + folder;
+	filePath = folderPath + L"\\" + file;
 
-	CoTaskMemFree(folderPath);
+	CoTaskMemFree(knownFolder);
 }
 
 set<string> ConfigFile::getHosts() {
 	set<string> hosts;
 
-	ifstream file(this->path.c_str());
+	ifstream file(filePath.c_str());
 
 	if (!file.good())
 		return hosts;
@@ -81,34 +80,18 @@ set<string> ConfigFile::getHosts() {
 }
 
 void ConfigFile::edit() {
-	PACL dcal;
-	PSECURITY_DESCRIPTOR psd;
-	PACCESS_ALLOWED_ACE ace = NULL;
-	BOOL canWrite = FALSE;
-
-	GetNamedSecurityInfo(
-		this->path.c_str(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
-		NULL, NULL, &dcal, NULL, &psd
-	);
-
-	for (DWORD i = 0; !canWrite && i < dcal->AceCount; i++) {
-		GetAce(dcal, i, (LPVOID*)&ace);
-
-		if (ace->Mask & FILE_WRITE_DATA)
-			CheckTokenMembership(NULL, &ace->SidStart, &canWrite);
-	}
-
-	LocalFree(psd);
+	if (GetFileAttributes(folderPath.c_str()) == INVALID_FILE_ATTRIBUTES)
+		CreateDirectory(folderPath.c_str(), NULL);
 
 	SHELLEXECUTEINFO execInfo{};
 	execInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	execInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-	execInfo.lpVerb = canWrite ? L"open" : L"runas";
+	execInfo.lpVerb = L"open";
 	execInfo.lpFile = L"notepad";
-	execInfo.lpParameters = this->path.c_str();
+	execInfo.lpParameters = filePath.c_str();
 	execInfo.nShow = SW_SHOW;
-
 	ShellExecuteEx(&execInfo);
+
 	WaitForSingleObject(execInfo.hProcess, INFINITE);
 	CloseHandle(execInfo.hProcess);
 }
